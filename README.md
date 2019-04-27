@@ -1,30 +1,40 @@
 # S3LevelDOWN
 
-An implementation of [LevelDOWN](https://github.com/rvagg/node-leveldown) that uses [Amazon S3](https://aws.amazon.com/s3/) as a backing store. S3 is actually a giant key-value store on the cloud, even though it is marketed as a file store. Use as a backend to [LevelUP](https://github.com/rvagg/node-levelup).
+An [abstract-leveldown](https://github.com/Level/abstract-leveldown) compliant implementation of [LevelDOWN](https://github.com/Level/leveldown) that uses [Amazon S3](https://aws.amazon.com/s3/) as a backing store. S3 is actually a giant key-value store on the cloud, even though it is marketed as a file store. Use this database with the [LevelUP](https://github.com/Level/levelup/) API.
 
-To use this optimally, please read Performance considerations and Warning about concurrency!
+To use this optimally, please read Performance considerations and Warning about concurrency sections below.
 
-You could also just use this as an alternate API to read/write S3. Much simpler to code, compared to the AWS SDK!
+You could also just use this as an alternate API to read/write S3. The API simpler to code compared to the AWS SDK!
 
 ## Installation
 
-```bash
-$ npm install s3leveldown
-```
-
-And install levelup as required:
+Install `s3leveldown` and peer dependencies `levelup` and `aws-sdk` with `yarn` or `npm`.
 
 ```bash
-$ npm install levelup
+$ npm install s3leveldown aws-sdk levelup
 ```
+
+## Documentation
+
+See the [LevelUP API](https://github.com/Level/levelup#api) for high level usage.
+
+### `s3leveldown(location [, s3])`
+
+Constructor of `s3leveldown` backing store. Use with `levelup`.
+
+Arguments:
+* `location` name of the S3 bucket with optional sub-folder. Example `mybucket` or `mybucket/folder`.
+* `s3` Optional `AWS.S3` client from `aws-sdk`. A default client will be used if not specified.
 
 ## Example
 
 Please refer to the [AWS SDK docs to set up your API credentials](http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html) before using.
 
 ```js
-var levelup = require('levelup')
-  , db = levelup('my_bucket', { db: require('s3leveldown') })
+const levelup = require('levelup');
+const s3leveldown = require('s3leveldown');
+
+const db = levelup(s3leveldown('my_bucket'));
 
 db.batch()
   .put('name', 'Pikachu')
@@ -39,7 +49,7 @@ db.batch()
 
 ## Sub folders
 
-You can create your Level DB in a subfolder in your S3 bucket, just use `my_bucket/sub_folder` when passing the location.
+You can create your Level DB in a sub-folder in your S3 bucket, just use `my_bucket/sub_folder` when passing the location.
 
 ## Performance considerations
 
@@ -57,7 +67,7 @@ There are a few performance caveats due to the limited API provided by the AWS S
 
 Individual operations (`put` `get` `del`) are atomic as guaranteed by S3, but the implementation of `batch` is not atomic. Two concurrent batch calls will have their operations interwoven. Don't use any plugins which require this to be atomic or you will end up with your database corrupted! However, if you can guarantee that only one process will write the S3 bucket at a time, then this should not be an issue. Ideally, you want to avoid race conditions where two processes are writing to the same key at the same time. In those cases the last write wins.
 
-When iterating through a list of keys that may be modified, you may get the changes, similar to dirty reads.
+Iterator snapshots are not supported. When iterating through a list of keys that may be modified, you may get the changes, similar to dirty reads.
 
 ## Tests and debug
 

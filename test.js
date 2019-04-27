@@ -1,37 +1,36 @@
 var test = require('tape')
+var suite = require('abstract-leveldown/test')
 var s3leveldown = require('./s3leveldown')
-var testCommon = require('./testCommon')
-var testBuffer = new Buffer('hello')
 
 if (!process.env.S3_TEST_BUCKET) {
-  console.log("Please set the S3_TEST_BUCKET environment variable to run the test")
+  console.error("Please set the S3_TEST_BUCKET environment variable to run the test")
   process.exit(1)
   return
 }
 
-require('abstract-leveldown/abstract/leveldown-test').args(s3leveldown, test)
-require('abstract-leveldown/abstract/open-test').args(s3leveldown, test, testCommon)
-require('abstract-leveldown/abstract/open-test').open(s3leveldown, test, testCommon)
-require('abstract-leveldown/abstract/del-test').all(s3leveldown, test, testCommon)
-require('abstract-leveldown/abstract/put-test').all(s3leveldown, test, testCommon)
-require('abstract-leveldown/abstract/get-test').all(s3leveldown, test, testCommon)
-require('abstract-leveldown/abstract/put-get-del-test').all(
-  s3leveldown, test, testCommon, testBuffer)
-require('abstract-leveldown/abstract/close-test').close(s3leveldown, test, testCommon)
-//require('abstract-leveldown/abstract/iterator-test').all(s3leveldown, test, testCommon)
+var bucketTestIndex = 0;
+var testCommon = suite.common({
+  test: test,
+  factory: function () {
+    return new s3leveldown(process.env.S3_TEST_BUCKET + "/__leveldown_test-" + (++bucketTestIndex))
+  },
+  snapshots: false,
+  seek: false,
+  bufferKeys: false,
+  createIfMissing: false,
+  errorIfExists: false
+})
 
-require('abstract-leveldown/abstract/batch-test').all(s3leveldown, test, testCommon)
-require('abstract-leveldown/abstract/chained-batch-test').all(s3leveldown, test, testCommon)
+suite(testCommon)
 
-require('abstract-leveldown/abstract/ranges-test').all(s3leveldown, test, testCommon)
-
+// custom tests
 
 var db
 
 test('setUp common', testCommon.setUp)
 
 test('setUp #1', function (t) {
-  db = s3leveldown(testCommon.location())
+  db = testCommon.factory()
   db.open(function () {
     db.batch()
       .put('foo', 'bar')

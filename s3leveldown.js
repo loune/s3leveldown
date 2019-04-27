@@ -5,14 +5,14 @@ var inherits = require('inherits')
   , debug = require('debug')('S3LevelDOWN')
   , AWS = require('aws-sdk')
 
-var s3 = new AWS.S3({ apiVersion: '2006-03-01' })
+var staticS3 = new AWS.S3({ apiVersion: '2006-03-01' })
 
 function lt(value) {
-  return ltgt.compare(value, this._end) < 0
+  return ltgt.compare(value, this._finish) < 0
 }
 
 function lte(value) {
-  return ltgt.compare(value, this._end) <= 0
+  return ltgt.compare(value, this._finish) <= 0
 }
 
 function getStartAfterKey(key) {
@@ -47,8 +47,8 @@ function S3Iterator (db, options) {
   }
 
   self._start = ltgt.lowerBound(options)
-  self._end = ltgt.upperBound(options)
-  if (!nullEmptyUndefined(self._end)) {
+  self._finish = ltgt.upperBound(options)
+  if (!nullEmptyUndefined(self._finish)) {
     if (ltgt.upperBoundInclusive(options))
       self._test = lte
     else
@@ -78,8 +78,8 @@ S3Iterator.prototype._next = function (callback) {
 
   function listObjects() {
     var params = {
-        Bucket: self.bucket,
-        MaxKeys: self.s3ListObjectMaxKeys
+      Bucket: self.bucket,
+      MaxKeys: self.s3ListObjectMaxKeys
     }
 
     if (self.db.folderPrefix !== '') {
@@ -94,7 +94,7 @@ S3Iterator.prototype._next = function (callback) {
       params.StartAfter = self.db.folderPrefix + self.startAfter
     }
 
-    s3.listObjectsV2(params, function(err, data) {
+    self.db.s3.listObjectsV2(params, function(err, data) {
       if (err) {
         debug('listObjectsV2 error %s', err.message)
         callback(err)
@@ -190,9 +190,15 @@ S3Iterator.prototype._next = function (callback) {
 
 S3Iterator.prototype._test = function () { return true }
 
-function S3LevelDOWN (location) {
+function S3LevelDOWN (location, s3) {
   if (!(this instanceof S3LevelDOWN))
     return new S3LevelDOWN(location)
+
+  if (typeof location !== 'string') {
+    throw new Error('constructor requires a location string argument')
+  }
+
+  this.s3 = s3 || staticS3;
 
   if (location.indexOf('/') !== -1) {
     this.folderPrefix = location.substring(location.indexOf('/') + 1, location.length) + '/'
@@ -204,14 +210,33 @@ function S3LevelDOWN (location) {
 
   debug('db init %s %s', this.bucket, this.folderPrefix)
 
-  AbstractLevelDOWN.call(this, typeof location == 'string' ? location : '')
+  AbstractLevelDOWN.call(this)
 }
 
 inherits(S3LevelDOWN, AbstractLevelDOWN)
 
 S3LevelDOWN.prototype._open = function (options, callback) {
-  var self = this
-  setImmediate(function () { callback(null, self) })
+  this.s3.headBucket({ Bucket: this.bucket }, (err) => {
+    if (err) {
+      console.log(err);
+
+      // error, bucket is not found
+      if (options.createIfMissing) {
+        // try to create it
+        this.s3.createBucket({ Bucket: this.bucket }, (err) => {
+          if (err) {
+            setImmediate(() => callback(err))
+          } else {
+            setImmediate(callback)
+          }
+        })
+      } else {
+        setImmediate(() => callback(new Error(`Bucket ${this.bucket} does not exists or is inaccessible`)))
+      }
+    } else {
+      setImmediate(callback)
+    }
+  })
 }
 
 S3LevelDOWN.prototype._put = function (key, value, options, callback) {
@@ -221,7 +246,7 @@ S3LevelDOWN.prototype._put = function (key, value, options, callback) {
   if (!(value instanceof Buffer || value instanceof String))
     value = String(value)
 
-  s3.upload({
+  this.s3.upload({
     Bucket: this.bucket,
     Key: this.folderPrefix + key,
     Body: value
@@ -237,7 +262,7 @@ S3LevelDOWN.prototype._put = function (key, value, options, callback) {
 }
 
 S3LevelDOWN.prototype._get = function (key, options, callback) {
-  s3.getObject({
+  this.s3.getObject({
     Bucket: this.bucket,
     Key: this.folderPrefix + key
   }, function (err, data) {
@@ -263,7 +288,7 @@ S3LevelDOWN.prototype._get = function (key, options, callback) {
 }
 
 S3LevelDOWN.prototype._del = function (key, options, callback) {
-  s3.deleteObject({
+  this.s3.deleteObject({
     Bucket: this.bucket,
     Key: this.folderPrefix + key
   }, function (err) {
