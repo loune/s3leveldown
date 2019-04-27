@@ -1,6 +1,6 @@
 {
   "name": "s3leveldown",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "An implementation of LevelDOWN that uses Amazon S3. Turn your S3 bucket into a DB",
   "homepage": "https://github.com/loune/s3leveldown",
   "main": "s3leveldown.js",
@@ -36,8 +36,8 @@
     "levelup": "^4.0.1"
   },
   "devDependencies": {
+    "aws-sdk": "^2.444.0",
     "jshint": "^2.9.4",
-    "tape": "^4.10.1",
-    "aws-sdk": "^2.444.0"
+    "tape": "^4.10.1"
   }
 }
