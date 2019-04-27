@@ -47,6 +47,27 @@ db.batch()
   });
 ```
 
+## Example with min.io
+
+You could also use s3leveldown with S3 compatible servers such as [MinIO](https://github.com/minio/minio).
+
+```js
+const levelup = require('levelup');
+const s3leveldown = require('s3leveldown');
+const AWS = require('aws-sdk');
+
+const s3 = new AWS.S3({
+  apiVersion: '2006-03-01',
+  accessKeyId: 'YOUR-ACCESSKEYID',
+  secretAccessKey: 'YOUR-SECRETACCESSKEY',
+  endpoint: 'http://127.0.0.1:9000',
+  s3ForcePathStyle: true,
+  signatureVersion: 'v4'
+});
+
+const db = levelup(s3leveldown('my_bucket', s3));
+```
+
 ## Sub folders
 
 You can create your Level DB in a sub-folder in your S3 bucket, just use `my_bucket/sub_folder` when passing the location.
