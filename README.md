@@ -2,9 +2,9 @@
 
 An [abstract-leveldown](https://github.com/Level/abstract-leveldown) compliant implementation of [LevelDOWN](https://github.com/Level/leveldown) that uses [Amazon S3](https://aws.amazon.com/s3/) as a backing store. S3 is actually a giant key-value store on the cloud, even though it is marketed as a file store. Use this database with the [LevelUP](https://github.com/Level/levelup/) API.
 
-To use this optimally, please read Performance considerations and Warning about concurrency sections below.
+To use this optimally, please read "Performance considerations" and "Warning about concurrency" sections below.
 
-You could also just use this as an alternate API to read/write S3. The API simpler to code compared to the AWS SDK!
+You could also use this as an alternative API to read/write S3. The API simpler to use when compared to the AWS SDK!
 
 ## Installation
 
@@ -78,7 +78,7 @@ There are a few performance caveats due to the limited API provided by the AWS S
 
 * When iterating, getting values is expensive. A seperate S3 API call is made to get the value of each key. If you don't need the value, pass `{ values: false }` in the options. Each S3 API call can return 1000 keys, so if there are 3000 results, 3 calls are made to list the keys, and if getting values as well, another 3000 API calls are made.
 
-* Avoid iterating large datasets when passing `{ reverse: true }`. Since the S3 API call do not allow retriving keys in reverse order, the entire result set needs to stored in memory and reversed. If your database is large ( >5k keys ) be sure to provide start (`gt`, `gte`) and end (`lt`, `lte`), or the entire database will need to be fetched.
+* Avoid iterating large datasets when passing `{ reverse: true }`. Since the S3 API call do not allow retrieving keys in reverse order, the entire result set needs to be stored in memory and reversed. If your database is large ( >5k keys ), be sure to provide start (`gt`, `gte`) and end (`lt`, `lte`), or the entire database will need to be fetched.
 
 * By default when iterating, 1000 keys will be returned. If you only want 10 keys for example, set `{ limit: 10 }` and the S3 API call will only request 10 keys. Note that if you have `{ reverse: true }`, this optimisation does not apply as we need to fetch everything from start to end and reverse it in memory. To override the default number of keys to return in a single API call,  you can set the ` s3ListObjectMaxKeys` option when creating the iterator. The maximum accepted by the S3 API is 1000.
 
@@ -88,13 +88,13 @@ There are a few performance caveats due to the limited API provided by the AWS S
 
 Individual operations (`put` `get` `del`) are atomic as guaranteed by S3, but the implementation of `batch` is not atomic. Two concurrent batch calls will have their operations interwoven. Don't use any plugins which require this to be atomic or you will end up with your database corrupted! However, if you can guarantee that only one process will write the S3 bucket at a time, then this should not be an issue. Ideally, you want to avoid race conditions where two processes are writing to the same key at the same time. In those cases the last write wins.
 
-Iterator snapshots are not supported. When iterating through a list of keys that may be modified, you may get the changes, similar to dirty reads.
+Iterator snapshots are not supported. When iterating through a list of keys and values, you may get the changes, similar to dirty reads.
 
 ## Tests and debug
 
-S3LevelDOWN uses [debug](https://github.com/visionmedia/debug). To see debug message set the environment variable `DEBUG=S3LevelDOWN`
+S3LevelDOWN uses [debug](https://github.com/visionmedia/debug). To see debug message set the environment variable `DEBUG=S3LevelDOWN`.
 
-To run the test suite, you to set a S3 bucket to the environment variable `S3_TEST_BUCKET`. Also be sure to [set your AWS credentials](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
+To run the test suite, you need to set a S3 bucket to the environment variable `S3_TEST_BUCKET`. Also be sure to [set your AWS credentials](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
 
 ```bash
 $ S3_TEST_BUCKET=my-test-bucket npm run test
