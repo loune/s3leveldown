@@ -192,7 +192,7 @@ S3Iterator.prototype._test = function () { return true }
 
 function S3LevelDOWN (location, s3) {
   if (!(this instanceof S3LevelDOWN))
-    return new S3LevelDOWN(location)
+    return new S3LevelDOWN(location, s3)
 
   if (typeof location !== 'string') {
     throw new Error('constructor requires a location string argument')
