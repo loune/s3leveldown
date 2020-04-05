@@ -7,6 +7,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "abstract-leveldown": "^6.2.3",
     "aws-sdk": "^2.653.0",
     "pouchdb": "^7.2.1",
     "pouchdb-adapter-leveldb-core": "^7.2.1",
