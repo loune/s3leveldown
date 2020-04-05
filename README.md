@@ -47,7 +47,7 @@ db.batch()
   });
 ```
 
-## Example with min.io
+### Example with min.io
 
 You could also use s3leveldown with S3 compatible servers such as [MinIO](https://github.com/minio/minio).
 
@@ -67,6 +67,8 @@ const s3 = new AWS.S3({
 
 const db = levelup(s3leveldown('my_bucket', s3));
 ```
+
+### [Example with PouchDB](./examples/pouchdb)
 
 ## Sub folders
 
