@@ -1,15 +1,14 @@
 {
   "name": "pouchdb-example",
   "version": "1.0.0",
-  "description": "s3leveldown example usage with PouchDB",
+  "description": "Simple s3leveldown example",
   "main": "index.js",
   "author": "Loune",
   "license": "MIT",
   "private": true,
   "dependencies": {
     "aws-sdk": "^2.653.0",
-    "pouchdb": "^7.2.1",
-    "pouchdb-adapter-leveldb-core": "^7.2.1",
+    "levelup": "^4.3.2",
     "s3leveldown": "^2.1.0"
   },
   "scripts": {
