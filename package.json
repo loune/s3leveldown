@@ -1,6 +1,6 @@
 {
   "name": "s3leveldown",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "An implementation of LevelDOWN that uses Amazon S3. Turn your S3 bucket into a DB",
   "homepage": "https://github.com/loune/s3leveldown",
   "main": "s3leveldown.js",
