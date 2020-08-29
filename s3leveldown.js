@@ -198,7 +198,7 @@ function S3LevelDOWN (location, s3) {
     throw new Error('constructor requires a location string argument')
   }
 
-  this.s3 = s3 || staticS3;
+  this.s3 = (s3 && Object.keys(s3).length > 0) || staticS3;
 
   if (location.indexOf('/') !== -1) {
     this.folderPrefix = location.substring(location.indexOf('/') + 1, location.length) + '/'
