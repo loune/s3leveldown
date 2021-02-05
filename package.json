@@ -8,7 +8,7 @@
     "node": ">=6"
   },
   "scripts": {
-    "test": "npm run lint && node ./test.js",
+    "test": "yarn lint && node ./test.js",
     "lint": "./node_modules/.bin/jshint s3leveldown.js"
   },
   "author": "Loune Lam <l-npm@siphon9.net> (https://loune.net/)",
@@ -26,18 +26,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "abstract-leveldown": "^6.0.3",
-    "debug": "^4.1.1",
-    "inherits": "^2.0.3",
+    "abstract-leveldown": "^6.3.0",
+    "debug": "^4.3.1",
+    "inherits": "^2.0.4",
+    "levelup": "^4.4.0",
     "ltgt": "^2.2.1"
   },
   "peerDependencies": {
-    "aws-sdk": "^2.444.0",
-    "levelup": "^4.0.1"
+    "aws-sdk": "^2.838.0",
+    "levelup": "^4.4.0"
   },
   "devDependencies": {
-    "aws-sdk": "^2.444.0",
-    "jshint": "^2.9.4",
-    "tape": "^4.10.1"
+    "aws-sdk": "^2.838.0",
+    "jshint": "^2.12.0",
+    "tape": "^5.1.1"
   }
 }

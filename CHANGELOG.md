@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.2.0] - 2021-02-05
+
+### Added
+
+- TypeScript types.
+
+### Changed
+
+- Update dependencies.
+
 ## [2.1.0] - 2020-04-05
 
 ### Changed

@@ -8,11 +8,13 @@ if (!process.env.S3_TEST_BUCKET) {
   return
 }
 
+var prefix = "/__leveldown_test-" + Date.now();
+
 var bucketTestIndex = 0;
 var testCommon = suite.common({
   test: test,
   factory: function () {
-    return new s3leveldown(process.env.S3_TEST_BUCKET + "/__leveldown_test-" + (++bucketTestIndex))
+    return new s3leveldown(process.env.S3_TEST_BUCKET + prefix + "-" + (++bucketTestIndex))
   },
   snapshots: false,
   seek: false,
