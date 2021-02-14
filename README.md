@@ -24,7 +24,7 @@ Constructor of `s3leveldown` backing store. Use with `levelup`.
 
 Arguments:
 * `location` name of the S3 bucket with optional sub-folder. Example `mybucket` or `mybucket/folder`.
-* `s3` Optional `AWS.S3` client from `aws-sdk`. A default client will be used if not specified.
+* `s3` Optional `S3` client from `aws-sdk`. A default client will be used if not specified.
 
 ## Example
 

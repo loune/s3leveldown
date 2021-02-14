@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.1] - 2021-02-14
+
+### Changed
+
+- Improve TypeScript definition.
+
 ## [2.2.0] - 2021-02-05
 
 ### Added
