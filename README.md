@@ -30,6 +30,29 @@ Arguments:
 
 Please refer to the [AWS SDK docs to set up your API credentials](http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html) before using.
 
+### Using Promises
+
+```js
+(async () => {
+  // create DB
+  const db = levelup(s3leveldown('mybucket'));
+
+  // put items
+  await db.batch()
+    .put('name', 'Pikachu')
+    .put('dob', 'February 27, 1996')
+    .put('occupation', 'Pokemon')
+    .write();
+  
+  // read items
+  await db.createReadStream()
+    .on('data', data => { console.log('data', `${data.key.toString()}=${data.value.toString()}`); })
+    .on('close', () => { console.log('done!') });
+})();
+```
+
+### Using Callbacks
+
 ```js
 const levelup = require('levelup');
 const s3leveldown = require('s3leveldown');

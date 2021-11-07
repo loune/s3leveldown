@@ -1,5 +1,5 @@
 {
-  "name": "pouchdb-example",
+  "name": "simple-example",
   "version": "1.0.0",
   "description": "Simple s3leveldown example",
   "main": "index.js",
@@ -7,9 +7,9 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "aws-sdk": "^2.653.0",
-    "levelup": "^4.3.2",
-    "s3leveldown": "^2.1.0"
+    "aws-sdk": "^2.1023.0",
+    "levelup": "^5.1.1",
+    "s3leveldown": "^2.2.1"
   },
   "scripts": {
     "start": "node index.js"

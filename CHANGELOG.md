@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.2] - 2021-11-07
+
+### Changed
+
+- Move `levelup` to peer dependency and support `^5.1.1`.
+
 ## [2.2.1] - 2021-02-14
 
 ### Changed
