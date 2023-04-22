@@ -5,7 +5,7 @@
   "homepage": "https://github.com/loune/s3leveldown",
   "main": "s3leveldown.js",
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "scripts": {
     "test": "yarn lint && node ./test.js",
@@ -29,15 +29,14 @@
     "@types/abstract-leveldown": "^7.2.0",
     "abstract-leveldown": "^7.2.0",
     "debug": "^4.3.1",
-    "inherits": "^2.0.4",
     "ltgt": "^2.2.1"
   },
   "peerDependencies": {
-    "aws-sdk": "^2.838.0",
+    "@aws-sdk/client-s3": "^3.317.0",
     "levelup": "^4.4.0 || ^5.1.1"
   },
   "devDependencies": {
-    "aws-sdk": "^2.838.0",
+    "@aws-sdk/client-s3": "^3.317.0",
     "jshint": "^2.12.0",
     "levelup": "^5.1.1",
     "tape": "^5.1.1"

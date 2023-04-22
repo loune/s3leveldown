@@ -23,7 +23,6 @@
   , "boss": true
   , "debug": true
   , "eqnull": true
-  , "esnext": true
   , "evil": true
   , "expr": true
   , "funcscope": false
@@ -57,4 +56,5 @@
   , "nomen": false
   , "onevar": true
   , "passfail": false
+  , "esversion": 11
 }

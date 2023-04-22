@@ -1,4 +1,4 @@
-# S3LevelDOWN
+# S3LevelDown
 
 An [abstract-leveldown](https://github.com/Level/abstract-leveldown) compliant implementation of [LevelDOWN](https://github.com/Level/leveldown) that uses [Amazon S3](https://aws.amazon.com/s3/) as a backing store. S3 is actually a giant key-value store on the cloud, even though it is marketed as a file store. Use this database with the [LevelUP](https://github.com/Level/levelup/) API.
 
@@ -8,7 +8,7 @@ You could also use this as an alternative API to read/write S3. The API simpler 
 
 ## Installation
 
-Install `s3leveldown` and peer dependencies `levelup` and `aws-sdk` with `yarn` or `npm`.
+Install `s3leveldown` and peer dependencies `levelup` and `@aws-sdk/client-s3` with `yarn` or `npm`.
 
 ```bash
 $ npm install s3leveldown aws-sdk levelup
@@ -18,7 +18,7 @@ $ npm install s3leveldown aws-sdk levelup
 
 See the [LevelUP API](https://github.com/Level/levelup#api) for high level usage.
 
-### `s3leveldown(location [, s3])`
+### `new S3LevelDown(location [, s3])`
 
 Constructor of `s3leveldown` backing store. Use with `levelup`.
 
@@ -33,9 +33,12 @@ Please refer to the [AWS SDK docs to set up your API credentials](http://docs.aw
 ### Using Promises
 
 ```js
+const levelup = require('levelup');
+const S3LevelDown = require('s3leveldown');
+
 (async () => {
   // create DB
-  const db = levelup(s3leveldown('mybucket'));
+  const db = levelup(new S3LevelDown('mybucket'));
 
   // put items
   await db.batch()
@@ -55,9 +58,9 @@ Please refer to the [AWS SDK docs to set up your API credentials](http://docs.aw
 
 ```js
 const levelup = require('levelup');
-const s3leveldown = require('s3leveldown');
+const S3LevelDown = require('s3leveldown');
 
-const db = levelup(s3leveldown('my_bucket'));
+const db = levelup(new S3LevelDown('my_bucket'));
 
 db.batch()
   .put('name', 'Pikachu')
@@ -76,7 +79,7 @@ You could also use s3leveldown with S3 compatible servers such as [MinIO](https:
 
 ```js
 const levelup = require('levelup');
-const s3leveldown = require('s3leveldown');
+const S3LevelDown = require('s3leveldown');
 const AWS = require('aws-sdk');
 
 const s3 = new AWS.S3({
@@ -88,7 +91,7 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4'
 });
 
-const db = levelup(s3leveldown('my_bucket', s3));
+const db = levelup(new S3LevelDown('my_bucket', s3));
 ```
 
 ### [Example with PouchDB](./examples/pouchdb)
@@ -117,7 +120,7 @@ Iterator snapshots are not supported. When iterating through a list of keys and 
 
 ## Tests and debug
 
-S3LevelDOWN uses [debug](https://github.com/visionmedia/debug). To see debug message set the environment variable `DEBUG=S3LevelDOWN`.
+S3LevelDown uses [debug](https://github.com/visionmedia/debug). To see debug message set the environment variable `DEBUG=S3LevelDown`.
 
 To run the test suite, you need to set a S3 bucket to the environment variable `S3_TEST_BUCKET`. Also be sure to [set your AWS credentials](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
 
