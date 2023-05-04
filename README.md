@@ -11,7 +11,7 @@ You could also use this as an alternative API to read/write S3. The API simpler 
 Install `s3leveldown` and peer dependencies `levelup` and `@aws-sdk/client-s3` with `yarn` or `npm`.
 
 ```bash
-$ npm install s3leveldown aws-sdk levelup
+$ npm install s3leveldown @aws-sdk/client-s3 levelup
 ```
 
 ## Documentation

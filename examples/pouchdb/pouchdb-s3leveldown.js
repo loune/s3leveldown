@@ -1,10 +1,10 @@
 const CoreLevelPouch = require('pouchdb-adapter-leveldb-core');
 const assign = require('pouchdb-utils').assign;
-const s3leveldown = require('s3leveldown');
+const S3LevelDown = require('s3leveldown');
 
 function S3LevelDownPouch(opts, callback) {
   var _opts = assign({
-    db: s3leveldown
+    db: (bucket) => new S3LevelDown(bucket)
   }, opts);
 
   CoreLevelPouch.call(this, _opts, callback);
