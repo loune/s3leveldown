@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0] - 2023-04-05
+
+### Changed
+
+- When initialising S3LevelDown, new is always required.
+- Update dependencies
+- Node.js 14 or higher required.
+- `levelup` `^5.1.1` required.
+- `@aws-sdk/client-s3` (AWS SDK v3) required. (replaces `aws-sdk`)
+- Use ESNext syntax.
+
 ## [2.2.2] - 2021-11-07
 
 ### Changed
