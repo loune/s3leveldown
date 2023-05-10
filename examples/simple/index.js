@@ -11,7 +11,7 @@ if (!process.env.S3_TEST_BUCKET) {
 
 (async () => {
   // create DB
-  const db = levelup(s3leveldown(process.env.S3_TEST_BUCKET));
+  const db = levelup(new s3leveldown(process.env.S3_TEST_BUCKET));
 
   // put items
   await db.batch()
